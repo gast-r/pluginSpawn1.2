@@ -45,8 +45,10 @@ public final class PluginSpawn extends JavaPlugin {
         hashOfSpawns = new HashMap();
         System.out.println("INITIALISATION DU HashMap de Spawn");
         try {
-            String[] nameOfSpawns = (String[]) this.getConfig().get("spawns");
+            Set<String> nameOfSpawns = this.getConfig().getConfigurationSection("spawns").getKeys(false);
+            System.out.println("NOMBRE DE SPAWN : " + nameOfSpawns.size());
             for (String spawn : nameOfSpawns) {
+                System.out.println(spawn);
                 Spawn onGoingSpawn = new Spawn();
                 onGoingSpawn.loadFromConfig("spawns." + spawn, this.getConfig());
                 hashOfSpawns.put(spawn, onGoingSpawn);

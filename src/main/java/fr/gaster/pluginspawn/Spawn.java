@@ -58,8 +58,8 @@ public class Spawn {
     }
 
     public void loadFromConfig(String path, FileConfiguration config) {
-        int loadId = (int) config.get(path + ".id");
-        String loadName = (String) config.get(path + ".name");
+        int loadId = config.getInt(path + ".id");
+        String loadName = config.getString(path + ".name");
         Location loadLocation = (Location) config.get(path + ".location");
         this.setName(loadName);
         this.setLocation(loadLocation);
