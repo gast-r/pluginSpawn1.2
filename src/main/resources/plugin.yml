@@ -1,0 +1,16 @@
+name: PluginSpawn
+version: '${project.version}'
+main: fr.gaster.pluginspawn.PluginSpawn
+api-version: 1.18
+authors: [ gaster ]
+description: Plugin permettant l'implémentation d'un /spawn, et des commands qui vont avec.
+
+commands:
+  setspawn:
+    description: Définit la localisation du spawn.
+    permission: setspawn.use
+    permission-message: Vous n'avez pas la permission.
+  spawn:
+    description: Téléporte le joueur au spawn.
+    permission: spawn.use
+    permission-message: Vous n'avez pas la permission.
