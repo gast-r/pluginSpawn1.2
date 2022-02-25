@@ -8,20 +8,27 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class ToSpawn implements CommandExecutor {
 
-    private Spawn spawn;
+    private PluginSpawn pluginMain;
+    private HashMap<String, Spawn> hashOfSpawn;
 
     public ToSpawn(PluginSpawn pluginMain) {
-        this.spawn = pluginMain.getSpawn();
+        this.pluginMain = pluginMain;
+        this.hashOfSpawn = this.pluginMain.getHashOfSpawns();
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
+            String spawnName = args.length == 0 ? " " : args[0];
+            Spawn spawnToTp = hashOfSpawn.containsKey(spawnName) ? hashOfSpawn.get(spawnName) : new Spawn(spawnName, null);
             Player player = (Player) sender;
-            SpawnUtility.playerToSpawn(spawn, player);
+            SpawnUtility.playerToSpawn(spawnToTp, player);
             return true;
+
             } else {
             sender.sendMessage("Cette commande est réservé aux joueurs.");
         }

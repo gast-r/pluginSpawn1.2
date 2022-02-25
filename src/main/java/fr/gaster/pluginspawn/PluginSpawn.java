@@ -8,10 +8,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashMap;
+import java.util.Set;
+
 public final class PluginSpawn extends JavaPlugin {
 
-    private Spawn spawn;
     private PluginManager pluginManager;
+    private HashMap<String, Spawn> hashOfSpawns;
+    private Spawn spawn;
 
     @Override
     public void onEnable() {
@@ -19,7 +23,7 @@ public final class PluginSpawn extends JavaPlugin {
         System.out.println("[PluginSpawn] Le plugin s'allume...");
         pluginManager = Bukkit.getServer().getPluginManager();
         this.saveDefaultConfig();
-        this.initSpawn();
+        this.initHashOfSpawn();
 
         pluginManager.registerEvents(new PlayerListener(this), this);
 
@@ -33,20 +37,26 @@ public final class PluginSpawn extends JavaPlugin {
         System.out.println("[PluginSpawn] Le plugin s'éteint...");
     }
 
-    public Spawn getSpawn() {
-        return this.spawn;
+    public HashMap<String, Spawn> getHashOfSpawns() {
+        return hashOfSpawns;
     }
 
-    private void initSpawn() {
-        spawn = new Spawn();
-        System.out.println("INITIALISATION DU SPAWN");
+    private void initHashOfSpawn() {
+        hashOfSpawns = new HashMap();
+        System.out.println("INITIALISATION DU HashMap de Spawn");
         try {
-            spawn.loadFromConfig("spawns.0", this.getConfig());
-            System.out.println("Spawn chargé depuis la config");
-            } catch (Exception e) {
-                System.out.println("EXCEPTION");
-                System.out.println(e.getMessage());
-            System.out.println("Le spawn n'a pas pu être chargé depuis la config, création d'un nouveau spawn.");
+            String[] nameOfSpawns = (String[]) this.getConfig().get("spawns");
+            for (String spawn : nameOfSpawns) {
+                Spawn onGoingSpawn = new Spawn();
+                onGoingSpawn.loadFromConfig("spawns." + spawn, this.getConfig());
+                hashOfSpawns.put(spawn, onGoingSpawn);
+            }
+
+        } catch (Exception e) {
+            System.out.println("EXCEPTION");
+            System.out.println(e.getMessage());
+            System.out.println("Not able to load spawn values from config, creation of an empty HashMap of spawn.");
+
         }
     }
 }

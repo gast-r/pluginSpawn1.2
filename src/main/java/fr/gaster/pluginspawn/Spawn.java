@@ -11,18 +11,12 @@ public class Spawn {
     private int id;
 
     public Spawn() {
-        this.id = 0;
-        this.name = "";
+        this.name = " ";
         this.location = null;
     }
-    public Spawn(int spawnId, String spawnName, Location spawnLocation) {
-        this.id = spawnId;
+    public Spawn(String spawnName, Location spawnLocation) {
         this.name = spawnName;
         this.location = spawnLocation;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getName() {
@@ -31,10 +25,6 @@ public class Spawn {
 
     public Location getLocation() {
         return location;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public void setName(String name) {
@@ -49,8 +39,8 @@ public class Spawn {
         return this.location != null;
     }
 
-    public boolean haveSpawn() {
-        return this.name != "";
+    public boolean haveName() {
+        return this.name != " ";
     }
 
     @Override
@@ -63,7 +53,6 @@ public class Spawn {
     }
 
     public void saveInConfig(String path, FileConfiguration config) {
-        config.set(path + ".id", id);
         config.set(path + ".name", name);
         config.set(path + ".location", location);
     }
@@ -72,7 +61,6 @@ public class Spawn {
         int loadId = (int) config.get(path + ".id");
         String loadName = (String) config.get(path + ".name");
         Location loadLocation = (Location) config.get(path + ".location");
-        this.setId(loadId);
         this.setName(loadName);
         this.setLocation(loadLocation);
     }

@@ -10,31 +10,36 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 public class SetSpawn implements CommandExecutor {
-    private Spawn spawn;
-    private FileConfiguration config;
     private PluginSpawn pluginMain;
+    private HashMap<String, Spawn> hashOfSpawn;
+    private FileConfiguration config;
 
     public SetSpawn(PluginSpawn pluginMain) {
-        this.spawn = pluginMain.getSpawn();
-        this.config = pluginMain.getConfig();
         this.pluginMain = pluginMain;
+        this.hashOfSpawn = this.pluginMain.getHashOfSpawns();
+        this.config = this.pluginMain.getConfig();
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(sender instanceof Player) {
-            String spawnName = args.length == 0 ? "" : args[0];
+            String spawnName = args.length == 0 ? " " : args[0];
             Player player = (Player) sender;
             Location playerLocation = new Location(
                     player.getWorld(),
                     player.getLocation().getX(),
                     player.getLocation().getY(),
                     player.getLocation().getZ());
-            spawn.setId(0);
-            spawn.setName(spawnName);
-            spawn.setLocation(playerLocation);
-            saveSpawnInConfig(spawn);
+            Spawn spawnToSet = new Spawn(spawnName, playerLocation);
+            if (hashOfSpawn.containsKey(spawnName)) { // is spawn in HashMap
+                this.hashOfSpawn.get(spawnName).setLocation(playerLocation);
+            } else { // if spawn NOT in HashMap, put the spawn in the HashMap
+                this.hashOfSpawn.put(spawnName, spawnToSet);
+            }
+            saveSpawnInConfig(spawnToSet);
             player.sendMessage(args.length == 0 ?
                     ChatColor.GOLD + "Vous venez définit le " + ChatColor.AQUA + "spawn" + ChatColor.GOLD + " sur votre position." :
                     ChatColor.GOLD + "Vous venez définit le spawn " + ChatColor.AQUA + args[0] + ChatColor.GOLD + " sur votre position." );
@@ -46,7 +51,7 @@ public class SetSpawn implements CommandExecutor {
     }
 
     private void saveSpawnInConfig(Spawn spawn) {
-        spawn.saveInConfig("spawns." + spawn.getId(), config);
+        spawn.saveInConfig("spawns." + spawn.getName(), config);
         pluginMain.saveConfig();
     }
 }

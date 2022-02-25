@@ -9,19 +9,22 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.util.HashMap;
+
 public class PlayerListener implements Listener {
 
     PluginSpawn pluginMain;
-    Spawn spawn;
+    private HashMap<String, Spawn> hashOfSpawn;
 
     public PlayerListener(PluginSpawn pluginMain) {
         this.pluginMain = pluginMain;
-        this.spawn = this.pluginMain.getSpawn();
+        this.hashOfSpawn = this.pluginMain.getHashOfSpawns();
     }
 
     @EventHandler (priority = EventPriority.HIGH)
     public void onPlayerConnection(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        SpawnUtility.playerToSpawn(spawn, player);
+        Spawn spawnToTp = hashOfSpawn.containsKey(" ") ? hashOfSpawn.get(" ") : new Spawn(" ", null);
+        SpawnUtility.playerToSpawn(spawnToTp, player);
     }
 }
